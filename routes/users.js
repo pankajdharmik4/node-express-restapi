@@ -1,44 +1,30 @@
 import express from 'express';
-import {v4 as uuidv4} from 'uuid'
+import { createUser,deleteUser,getUser,getUsers, updateUser } from '../controllers/users.js';
 
 //A router receives and sends data on computer networks.
 const router = express.Router();
 
 //All routes here is starting with /users already
 
-const users = []
+let users = []
 
 //GET ALL THE USERS
-router.get('/',(req,res)=>{
-    console.log(users);
-    res.send(users);
-})
+router.get('/',getUsers)
 
 //CREATE A USER
-router.post('/',(req,res)=>{
-    console.log("POST ROUTES ReACHED");
-    const user = req.body
-
-    //uuid (npm uuid to create id that is never same)
-    const userId = uuidv4();
-
-    const userWithId = {...user, id:userId}
-
-    users.push(userWithId)
-
-    res.send( `User with the name ${user.firstName} added to the database`)
-})
+router.post('/',createUser)
 
 
 //GET ONE USER
 //Anything after / will be in as id
 //user/2 => req.params {id:2}
-router.get('/:id',(req,res)=>{
-    // console.log(req.params)
-    const {id} = req.params;
+router.get('/:id',getUser)
 
-    const foundUser = users.find((user)=>user.id === id);
-    res.send(foundUser)
-})
+//FOR DELETEING USER
+router.delete('/:id',deleteUser)
+
+//Update user PATCH is use to partial modify something
+//PUT is use to overwrite something
+router.patch('/:id',updateUser)
 
 export default router;
